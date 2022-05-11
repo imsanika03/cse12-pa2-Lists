@@ -16,10 +16,19 @@ public class LinkedGL<E> implements MyList<E> {
     int size;
 
     public LinkedGL(E[] contents) {
-    	front = null; 
+    	this.init(contents); 
+    }
+    
+    public void init(E[] contents) {
+    	front = new Node(null, null); 
+    	Node current = front; 
+    	
     	for (E e: contents) {
-    		Node add = new Node(e, front); 
-    		front = add;
+    		
+    		Node add = new Node(e, null); 
+    		current.next = add;
+    		current = current.next; 
+    		
     		
     	}
     	size = contents.length; 
@@ -32,7 +41,7 @@ public class LinkedGL<E> implements MyList<E> {
 		E[] newArr = (E[])(new Object[size]); 
 		Node first = front; 
 		while(first.next != null) {
-			newArr[index] = first.value; 
+			newArr[index] = first.next.value; 
 			first = first.next; 
 			index++; 
 			
@@ -46,49 +55,56 @@ public class LinkedGL<E> implements MyList<E> {
 	@Override
 	public void transformAll(MyTransformer mt) {
 		E[] ret = this.toArray(); 
-		for (int i = 0; i < ret.length; i++) {
+		for (int i = 0; i < size; i++) {
 			if (ret[i] != null) {
 				ret[i] = (E) mt.transformElement(ret[i]); 
-		
 			}
 		}
 		
-		front = null; 
-    	for (E e: ret) {
-    		Node add = new Node(e, front); 
-    		front = add;
-    		
-    	}
-    	size = ret.length;
+		init(ret); 
+		
 		
 	}
 
 	@Override
 	public void chooseAll(MyChooser mc) {
-		E[] ret = this.toArray(); 
-		ArrayList<E> arr = new ArrayList<>(); 
-		int index = 0; 
-		for (int i = 0; i < ret.length; i++) {
-			if (ret[i] != null && mc.chooseElement(ret[i])) {
-			
-				index++; 
-				arr.add(ret[i]); 
+		int count = 0; 
+		E[] elements = this.toArray(); 
 		
+		for (int i = 0; i < size; i++) {
+			if (elements[i] != null && mc.chooseElement(elements[i])) {
+				
+				
+				count++; 
 			}
 		}
 		
-		E[] newr = (E[])(new Object[index+1]); 
-		for (int j = 0; j < newr.length; j++) {
-			newr[j] = arr.get(j); 
+		
+		
+		E[] newArr = (E[])(new Object[count]); 
+		int count2 = 0; 
+		for (int j = 0; j < size ;j++) {
+			if (elements[j] != null && mc.chooseElement(elements[j])) {
+				newArr[count2] = elements[j];  
+				
+				count2++; 
+			}
+			
 		}
 		
-		front = null; 
-    	for (E e: newr) {
-    		Node add = new Node(e, front); 
-    		front = add;
+		front = new Node(null, null); 
+    	Node current = front; 
+    	
+    	for (E e: newArr) {
+    		
+    		Node add = new Node(e, null); 
+    		current.next = add;
+    		current = current.next; 
+    		
     		
     	}
-    	size = newr.length;
+    	size = newArr.length; 
+		
 		
 	}
 

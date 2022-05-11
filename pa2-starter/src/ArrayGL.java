@@ -12,12 +12,16 @@ public class ArrayGL<E> implements MyList<E> {
 
 	@Override
 	public E[] toArray() {
-		return elements; 
+		E[] newArr = (E[])new Object[size]; 
+		for (int i = 0; i < size; i++) {
+			newArr[i] = elements[i]; 
+		}
+		return newArr; 
 	}
 
 	@Override
 	public void transformAll(MyTransformer mt) {
-		for (int i = 0; i < elements.length; i++) {
+		for (int i = 0; i < size; i++) {
 			if (elements[i] != null) {
 				elements[i] = (E) mt.transformElement(elements[i]); 
 			}
@@ -28,24 +32,31 @@ public class ArrayGL<E> implements MyList<E> {
 	@Override
 	public void chooseAll(MyChooser mc) {
 		int count = 0; 
-		ArrayList<E> arrList = new ArrayList<>(); 
-		for (int i = 0; i < elements.length; i++) {
+		
+		for (int i = 0; i < size; i++) {
 			if (elements[i] != null && mc.chooseElement(elements[i])) {
-				arrList.add(elements[i]); 
+				
 				
 				count++; 
 			}
 		}
 		
-		E[] newArr = (E[])(new Object[count+1]); 
-		for (int j = 0; j < newArr.length;j++) {
-			newArr[j] = arrList.get(0); 
-			arrList.remove(arrList.get(0)); 
+		
+		
+		E[] newArr = (E[])(new Object[count]); 
+		int count2 = 0; 
+		for (int j = 0; j < size ;j++) {
+			if (elements[j] != null && mc.chooseElement(elements[j])) {
+				newArr[count2] = elements[j];  
+				
+				count2++; 
+			}
 			
 		}
 		
 		elements = newArr; 
-		size = newArr.length; 
+		size = count; 
+		
 		
 	}
 
